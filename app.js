@@ -20,7 +20,7 @@ let appState = {
 document.addEventListener('DOMContentLoaded', initApp);
 
 async function initApp() {
-    console.log('Initializing Golf GPS App...');
+    console.log('=== INIT APP START ===');
 
     // Validate config
     if (!CONFIG.mapbox.accessToken || CONFIG.mapbox.accessToken === 'YOUR_MAPBOX_TOKEN') {
@@ -30,71 +30,27 @@ async function initApp() {
 
     // Set Mapbox token
     mapboxgl.accessToken = CONFIG.mapbox.accessToken;
+    console.log('✓ Mapbox token set');
 
     // Load saved state
     loadGameState();
+    console.log('Game state loaded. gameStarted:', appState.gameStarted);
 
     // Setup screens
     if (appState.gameStarted) {
+        console.log('Showing game screen');
         showGameScreen();
         initMap();
         loadHole(appState.currentHole);
     } else {
+        console.log('Showing setup screen');
         showSetupScreen();
     }
 
-    setupEventListeners();// ===== EVENT LISTENERS =====
-function setupEventListeners() {
-    console.log('Setting up event listeners...');
-    
-    // Setup screen
-    const startBtn = document.getElementById('start-game-btn');
-    console.log('Start button element:', startBtn);
-    
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            console.log('START ROUND clicked!');
-            startGame();
-        });
-        console.log('Start button listener attached');
-    } else {
-        console.error('START BUTTON NOT FOUND!');
-    }
-
-    // Game controls
-    const prevBtn = document.getElementById('prev-hole');
-    const nextBtn = document.getElementById('next-hole');
-    
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            if (appState.currentHole > 1) {
-                loadHole(appState.currentHole - 1);
-            }
-        });
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            const course = getCourse(appState.currentCourseId);
-            if (appState.currentHole < course.holes.length) {
-                loadHole(appState.currentHole + 1);
-            }
-        });
-    }
-
-    const menuBtn = document.getElementById('menu-btn');
-    if (menuBtn) {
-        menuBtn.addEventListener('click', () => {
-            if (confirm('End this round?')) {
-                appState.gameStarted = false;
-                saveGameState();
-                location.reload();
-            }
-        });
-    }
-    
-    console.log('Event listeners setup complete');
-}
+    // Setup event listeners
+    console.log('About to call setupEventListeners...');
+    setupEventListeners();
+    console.log('setupEventListeners completed');
 
     console.log('✓ Golf GPS App initialized');
 }
@@ -110,12 +66,14 @@ function showGameScreen() {
     document.getElementById('game-screen').style.display = 'flex';
 }
 
-function startGame() {    console.log('START GAME clicked!');
+function startGame() {
+    console.log('START GAME clicked!');
     const p1 = document.getElementById('player-1-name').value.trim();
     const p2 = document.getElementById('player-2-name').value.trim();
     const p3 = document.getElementById('player-3-name').value.trim();
     const p4 = document.getElementById('player-4-name').value.trim();
-                          console.log('Players:', p1, p2, p3, p4);
+
+    console.log('Players:', p1, p2, p3, p4);
 
     if (!p1) {
         alert('Player 1 name required');
@@ -433,30 +391,55 @@ function updateScore(playerIdx, direction) {
 
 // ===== EVENT LISTENERS =====
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
     // Setup screen
-    document.getElementById('start-game-btn').addEventListener('click', startGame);
+    const startBtn = document.getElementById('start-game-btn');
+    console.log('Start button element:', startBtn);
+    
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            console.log('START ROUND clicked!');
+            startGame();
+        });
+        console.log('Start button listener attached');
+    } else {
+        console.error('START BUTTON NOT FOUND!');
+    }
 
     // Game controls
-    document.getElementById('prev-hole').addEventListener('click', () => {
-        if (appState.currentHole > 1) {
-            loadHole(appState.currentHole - 1);
-        }
-    });
+    const prevBtn = document.getElementById('prev-hole');
+    const nextBtn = document.getElementById('next-hole');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (appState.currentHole > 1) {
+                loadHole(appState.currentHole - 1);
+            }
+        });
+    }
 
-    document.getElementById('next-hole').addEventListener('click', () => {
-        const course = getCourse(appState.currentCourseId);
-        if (appState.currentHole < course.holes.length) {
-            loadHole(appState.currentHole + 1);
-        }
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const course = getCourse(appState.currentCourseId);
+            if (appState.currentHole < course.holes.length) {
+                loadHole(appState.currentHole + 1);
+            }
+        });
+    }
 
-    document.getElementById('menu-btn').addEventListener('click', () => {
-        if (confirm('End this round?')) {
-            appState.gameStarted = false;
-            saveGameState();
-            location.reload();
-        }
-    });
+    const menuBtn = document.getElementById('menu-btn');
+    if (menuBtn) {
+        menuBtn.addEventListener('click', () => {
+            if (confirm('End this round?')) {
+                appState.gameStarted = false;
+                saveGameState();
+                location.reload();
+            }
+        });
+    }
+    
+    console.log('Event listeners setup complete');
 }
 
 // ===== GAME STATE PERSISTENCE =====
