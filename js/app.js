@@ -232,7 +232,6 @@ function updateMapWithHole(hole) {
 
 // ===== FIT MAP TO HOLE =====
 function fitMapToHole(hole) {
-    // Calculate bounds that include all hole markers
     const coordinates = [
         hole.tee,
         hole.greenFront,
@@ -244,7 +243,6 @@ function fitMapToHole(hole) {
         return bounds.extend(coord);
     }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
 
-    // Fit with padding for mobile
     appState.map.fitBounds(bounds, {
         padding: { top: 100, bottom: 200, left: 20, right: 20 },
         maxZoom: 18,
