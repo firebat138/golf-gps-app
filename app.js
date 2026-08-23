@@ -59,11 +59,12 @@ function showGameScreen() {
     document.getElementById('game-screen').style.display = 'flex';
 }
 
-function startGame() {
+function startGame() {    console.log('START GAME clicked!');
     const p1 = document.getElementById('player-1-name').value.trim();
     const p2 = document.getElementById('player-2-name').value.trim();
     const p3 = document.getElementById('player-3-name').value.trim();
     const p4 = document.getElementById('player-4-name').value.trim();
+                          console.log('Players:', p1, p2, p3, p4);
 
     if (!p1) {
         alert('Player 1 name required');
