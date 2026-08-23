@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Golf GPS">
+    
+    <title>Golf GPS</title>
+    
+    <!-- Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    
+    <!-- App Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Header -->
+        <header id="header">
+            <div class="header-content">
+                <div class="hole-info">
+                    <div class="hole-number">HOLE 7</div>
+                    <div class="hole-meta">PAR 4 • 386 YDS</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Map Container -->
+        <div id="map"></div>
+
+        <!-- Distance Display -->
+        <div id="distance-display" class="distance-display">
+            <div class="distance-column">
+                <div class="distance-label">FRONT</div>
+                <div class="distance-value">--</div>
+            </div>
+            <div class="distance-column center">
+                <div class="distance-label">CENTER</div>
+                <div class="distance-value main">--</div>
+            </div>
+            <div class="distance-column">
+                <div class="distance-label">BACK</div>
+                <div class="distance-value">--</div>
+            </div>
+        </div>
+
+        <!-- GPS Status -->
+        <div id="gps-status" class="gps-status">GPS ± -- yd</div>
+
+        <!-- Controls -->
+        <div id="controls" class="controls">
+            <button id="prev-hole" class="btn btn-secondary" disabled>← HOLE</button>
+            <button id="next-hole" class="btn btn-secondary">HOLE →</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="data/courses.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
