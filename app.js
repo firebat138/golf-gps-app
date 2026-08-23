@@ -43,7 +43,58 @@ async function initApp() {
         showSetupScreen();
     }
 
-    setupEventListeners();
+    setupEventListeners();// ===== EVENT LISTENERS =====
+function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
+    // Setup screen
+    const startBtn = document.getElementById('start-game-btn');
+    console.log('Start button element:', startBtn);
+    
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            console.log('START ROUND clicked!');
+            startGame();
+        });
+        console.log('Start button listener attached');
+    } else {
+        console.error('START BUTTON NOT FOUND!');
+    }
+
+    // Game controls
+    const prevBtn = document.getElementById('prev-hole');
+    const nextBtn = document.getElementById('next-hole');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (appState.currentHole > 1) {
+                loadHole(appState.currentHole - 1);
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const course = getCourse(appState.currentCourseId);
+            if (appState.currentHole < course.holes.length) {
+                loadHole(appState.currentHole + 1);
+            }
+        });
+    }
+
+    const menuBtn = document.getElementById('menu-btn');
+    if (menuBtn) {
+        menuBtn.addEventListener('click', () => {
+            if (confirm('End this round?')) {
+                appState.gameStarted = false;
+                saveGameState();
+                location.reload();
+            }
+        });
+    }
+    
+    console.log('Event listeners setup complete');
+}
 
     console.log('✓ Golf GPS App initialized');
 }
