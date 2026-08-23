@@ -28,15 +28,15 @@ const COURSES = {
         location: 'Test Location',
         holes: [
             // HOLE 1
-            {
-                holeNumber: 1,
-                par: 4,
-                yardage: 386,
-                tee: [-87.6298, 41.8819],
-                greenFront: [-87.6285, 41.8825],
-                greenCenter: [-87.6280, 41.8828],
-                greenBack: [-87.6275, 41.8830]
-            },
+{
+    holeNumber: 1,
+    par: 4,
+    yardage: 386,
+    tee: [-75.40678442009663, 38.90092847823996],
+    greenFront: [-75.41028074865639, 38.899659810499244],
+    greenCenter: [-75.41038361654935, 38.89960643940365],
+    greenBack: [-75.41050323037834, 38.89953941518028]
+},
             // HOLE 2
             {
                 holeNumber: 2,
