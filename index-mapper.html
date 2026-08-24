@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Golf Course Mapper</title>
+    <style>
+        :root {
+            --color-bg: #0a0e27;
+            --color-bg-secondary: #141829;
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #b0b8c1;
+            --color-accent: #00d97e;
+            --color-warning: #ff6b3d;
+            --color-border: #2a3447;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+            gap: 12px;
+        }
+
+        .header {
+            text-align: center;
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 12px;
+            flex-shrink: 0;
+        }
+
+        .hole-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .hole-meta {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .status-section {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 12px;
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+
+        .status-label {
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-value {
+            font-family: monospace;
+            color: var(--color-accent);
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .coordinates-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .coord-item {
+            background-color: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .coord-label {
+            font-size: 10px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .coord-status {
+            font-size: 12px;
+            margin-top: 4px;
+            color: var(--color-accent);
+        }
+
+        .coord-status.empty {
+            color: var(--color-text-secondary);
+        }
+
+        .buttons-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        .btn-save {
+            background-color: var(--color-accent);
+            color: var(--color-bg);
+        }
+
+        .btn-save:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        .btn-nav {
+            background-color: var(--color-bg-secondary);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-nav:active {
+            background-color: var(--color-border);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, var(--color-accent) 0%, #00a85c 100%);
+            color: var(--color-bg);
+            width: 100%;
+        }
+
+        .nav-section {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .warning {
+            background-color: rgba(255, 107, 61, 0.1);
+            border: 1px solid var(--color-warning);
+            color: var(--color-warning);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .success {
+            color: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="hole-number" id="hole-display">HOLE 1</div>
+            <div class="hole-meta" id="hole-meta">18 Holes</div>
+        </div>
+
+        <!-- GPS Status -->
+        <div class="status-section">
+            <div class="status-label">GPS Status</div>
+            <div class="status-value" id="gps-status">Waiting for GPS...</div>
+            <div class="warning" id="gps-warning" style="display:none;">⚠ Poor GPS accuracy or no signal</div>
+        </div>
+
+        <!-- Coordinates -->
+        <div class="status-section">
+            <div class="status-label">Coordinates Saved</div>
+            <div class="coordinates-display">
+                <div class="coord-item">
+                    <div class="coord-label">TEE</div>
+                    <div class="coord-status empty" id="tee-status">—</div>
+                </div>
+                <div class="coord-item">
+                    <div class="coord-label">FRONT</div>
+                    <div class="coord-status empty" id="front-status">—</div>
+                </div>
+                <div class="coord-item">
+                    <div class="coord-label">CENTER</div>
+                    <div class="coord-status empty" id="center-status">—</div>
+                </div>
+                <div class="coord-item">
+                    <div class="coord-label">BACK</div>
+                    <div class="coord-status empty" id="back-status">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="buttons-section">
+            <div class="btn-group">
+                <button class="btn btn-save" onclick="saveCoordinate('tee')">SAVE TEE</button>
+                <button class="btn btn-save" onclick="saveCoordinate('front')">SAVE FRONT</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-save" onclick="saveCoordinate('center')">SAVE CENTER</button>
+                <button class="btn btn-save" onclick="saveCoordinate('back')">SAVE BACK</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-section">
+            <button class="btn btn-nav" id="prev-btn" onclick="previousHole()" style="flex:1;">← HOLE</button>
+            <button class="btn btn-nav" id="next-btn" onclick="nextHole()" style="flex:1;">HOLE →</button>
+            <button class="btn btn-export" onclick="exportData()">EXPORT</button>
+        </div>
+    </div>
+
+    <script>
+        // STATE
+        let mapperState = {
+            currentHole: 1,
+            gpsData: null,
+            courseData: {}
+        };
+
+        // Initialize holes
+        for (let i = 1; i <= 18; i++) {
+            mapperState.courseData[i] = { tee: null, front: null, center: null, back: null };
+        }
+
+        // GPS TRACKING
+        function startGPS() {
+            if (!navigator.geolocation) {
+                document.getElementById('gps-status').textContent = 'GPS not available';
+                return;
+            }
+
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const accuracy = Math.round(position.coords.accuracy);
+
+                    mapperState.gpsData = { lat, lon, accuracy };
+
+                    const status = `${lat.toFixed(6)}, ${lon.toFixed(6)}<br>Accuracy: ±${accuracy}m`;
+                    document.getElementById('gps-status').innerHTML = status;
+
+                    const warning = document.getElementById('gps-warning');
+                    if (accuracy > 10) {
+                        warning.style.display = 'block';
+                    } else {
+                        warning.style.display = 'none';
+                    }
+                },
+                (error) => {
+                    document.getElementById('gps-status').textContent = '❌ ' + error.message;
+                },
+                { enableHighAccuracy: true, maximumAge: 1000, timeout: 10000 }
+            );
+        }
+
+        // SAVE COORDINATE
+        function saveCoordinate(type) {
+            if (!mapperState.gpsData) {
+                alert('No GPS signal yet. Try again.');
+                return;
+            }
+
+            const { lat, lon } = mapperState.gpsData;
+            const coords = [lon, lat]; // [longitude, latitude] for Mapbox
+
+            mapperState.courseData[mapperState.currentHole][type] = coords;
+
+            // Update display
+            const statusEl = document.getElementById(type + '-status');
+            statusEl.textContent = '✓ Saved';
+            statusEl.classList.remove('empty');
+            statusEl.classList.add('success');
+
+            // Visual feedback
+            setTimeout(() => {
+                alert(`${type.toUpperCase()} saved for Hole ${mapperState.currentHole}`);
+            }, 100);
+        }
+
+        // NAVIGATION
+        function previousHole() {
+            if (mapperState.currentHole > 1) {
+                mapperState.currentHole--;
+                updateUI();
+            }
+        }
+
+        function nextHole() {
+            if (mapperState.currentHole < 18) {
+                mapperState.currentHole++;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('hole-display').textContent = `HOLE ${mapperState.currentHole}`;
+
+            const hole = mapperState.courseData[mapperState.currentHole];
+            ['tee', 'front', 'center', 'back'].forEach(type => {
+                const el = document.getElementById(type + '-status');
+                if (hole[type]) {
+                    el.textContent = '✓ Saved';
+                    el.classList.remove('empty');
+                    el.classList.add('success');
+                } else {
+                    el.textContent = '—';
+                    el.classList.add('empty');
+                    el.classList.remove('success');
+                }
+            });
+
+            document.getElementById('prev-btn').disabled = mapperState.currentHole === 1;
+            document.getElementById('next-btn').disabled = mapperState.currentHole === 18;
+        }
+
+        // EXPORT
+        function exportData() {
+            let output = '// Southern Delaware Golf Club - Generated Course Data\n\n';
+
+            for (let i = 1; i <= 18; i++) {
+                const hole = mapperState.courseData[i];
+                if (hole.tee && hole.front && hole.center && hole.back) {
+                    output += `// HOLE ${i}\n`;
+                    output += `{\n`;
+                    output += `    holeNumber: ${i},\n`;
+                    output += `    par: 4,\n`;
+                    output += `    yardage: 386,\n`;
+                    output += `    tee: [${hole.tee[0]}, ${hole.tee[1]}],\n`;
+                    output += `    greenFront: [${hole.front[0]}, ${hole.front[1]}],\n`;
+                    output += `    greenCenter: [${hole.center[0]}, ${hole.center[1]}],\n`;
+                    output += `    greenBack: [${hole.back[0]}, ${hole.back[1]}]\n`;
+                    output += `},\n\n`;
+                }
+            }
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(output).then(() => {
+                alert('Course data copied to clipboard!\n\nPaste into data/courses.js');
+            }).catch(() => {
+                // Fallback: show in prompt
+                prompt('Copy this course data:\n\n(Ctrl+C to copy)', output);
+            });
+        }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            startGPS();
+            updateUI();
+        });
+    </script>
+</body>
+</html>
