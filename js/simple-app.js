@@ -84,10 +84,32 @@ function loadHole(holeNumber) {
 
         const coords = [hole.tee, hole.greenFront, hole.greenCenter, hole.greenBack];
         const bounds = coords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(coords[0], coords[0]));
-        appState.map.fitBounds(bounds, { padding: 150, maxZoom: 19, duration: 300 });
+
+        // Calculate bearing from tee to green center so hole points up the screen
+        const bearing = calculateBearing(hole.tee, hole.greenCenter);
+
+        appState.map.fitBounds(bounds, {
+            padding: { top: 120, bottom: 220, left: 60, right: 60 },
+            maxZoom: 19,
+            duration: 300,
+            bearing: bearing
+        });
     }
 
     updateNavButtons(course.holes.length);
+}
+
+function calculateBearing(start, end) {
+    // start and end are [lng, lat]
+    const lat1 = start[1] * Math.PI / 180;
+    const lat2 = end[1] * Math.PI / 180;
+    const dLng = (end[0] - start[0]) * Math.PI / 180;
+
+    const y = Math.sin(dLng) * Math.cos(lat2);
+    const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+    let bearing = Math.atan2(y, x) * 180 / Math.PI;
+    bearing = (bearing + 360) % 360;
+    return bearing;
 }
 
 function updateNavButtons(totalHoles) {
