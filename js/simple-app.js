@@ -1,7 +1,10 @@
 let appState = {
     currentCourseId: 'test-course',
     currentHole: 1,
-    map: null
+    map: null,
+    mapReady: false,
+    playerPosition: null,
+    gpsWatchId: null
 };
 
 document.addEventListener('DOMContentLoaded', initApp);
@@ -13,7 +16,7 @@ async function initApp() {
     }
     mapboxgl.accessToken = CONFIG.mapbox.accessToken;
     initMap();
-    loadHole(1);
+    startGPS();
 }
 
 function initMap() {
@@ -60,6 +63,39 @@ function initMap() {
                 'circle-stroke-color': '#fff'
             }
         });
+
+        // Player live position source + layer
+        appState.map.addSource('player-position', {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] }
+        });
+
+        appState.map.addLayer({
+            id: 'player-position-halo',
+            type: 'circle',
+            source: 'player-position',
+            paint: {
+                'circle-radius': 14,
+                'circle-color': '#3b82f6',
+                'circle-opacity': 0.25
+            }
+        });
+
+        appState.map.addLayer({
+            id: 'player-position-dot',
+            type: 'circle',
+            source: 'player-position',
+            paint: {
+                'circle-radius': 7,
+                'circle-color': '#3b82f6',
+                'circle-stroke-width': 3,
+                'circle-stroke-color': '#fff'
+            }
+        });
+
+        // Map is fully ready now - safe to load hole data
+        appState.mapReady = true;
+        loadHole(appState.currentHole);
     });
 }
 
@@ -73,7 +109,7 @@ function loadHole(holeNumber) {
     document.querySelector('.hole-number').textContent = 'HOLE ' + hole.holeNumber;
     document.querySelector('.hole-meta').textContent = 'PAR ' + hole.par + ' • ' + hole.yardage + ' YDS';
 
-    if (appState.map && appState.map.isStyleLoaded()) {
+    if (appState.map && appState.mapReady) {
         const features = [
             { type: 'Feature', geometry: { type: 'Point', coordinates: hole.tee }, properties: { type: 'tee' } },
             { type: 'Feature', geometry: { type: 'Point', coordinates: hole.greenFront }, properties: { type: 'front' } },
@@ -85,22 +121,22 @@ function loadHole(holeNumber) {
         const coords = [hole.tee, hole.greenFront, hole.greenCenter, hole.greenBack];
         const bounds = coords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(coords[0], coords[0]));
 
-        // Calculate bearing from tee to green center so hole points up the screen
+        // Rotate so the hole points straight up the screen (tee at bottom, green at top)
         const bearing = calculateBearing(hole.tee, hole.greenCenter);
 
         appState.map.fitBounds(bounds, {
-            padding: { top: 120, bottom: 220, left: 60, right: 60 },
+            padding: { top: 100, bottom: 180, left: 50, right: 50 },
             maxZoom: 19,
-            duration: 300,
+            duration: 400,
             bearing: bearing
         });
     }
 
     updateNavButtons(course.holes.length);
+    updateDistances();
 }
 
 function calculateBearing(start, end) {
-    // start and end are [lng, lat]
     const lat1 = start[1] * Math.PI / 180;
     const lat2 = end[1] * Math.PI / 180;
     const dLng = (end[0] - start[0]) * Math.PI / 180;
@@ -115,6 +151,95 @@ function calculateBearing(start, end) {
 function updateNavButtons(totalHoles) {
     document.getElementById('prev-hole').disabled = appState.currentHole === 1;
     document.getElementById('next-hole').disabled = appState.currentHole === totalHoles;
+}
+
+// ===== GPS TRACKING =====
+function startGPS() {
+    if (!navigator.geolocation) {
+        document.getElementById('gps-status').textContent = 'GPS not available';
+        return;
+    }
+
+    appState.gpsWatchId = navigator.geolocation.watchPosition(
+        onGPSUpdate,
+        onGPSError,
+        { enableHighAccuracy: true, maximumAge: 1000, timeout: 10000 }
+    );
+}
+
+function onGPSUpdate(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const accuracyMeters = position.coords.accuracy;
+    const accuracyYards = Math.round(accuracyMeters * 1.09361);
+
+    appState.playerPosition = { lat, lon, accuracyYards };
+
+    const gpsEl = document.getElementById('gps-status');
+    gpsEl.textContent = 'GPS ± ' + accuracyYards + ' yd';
+    gpsEl.classList.toggle('warning', accuracyYards > 10);
+
+    // Update player marker on map
+    if (appState.map && appState.mapReady) {
+        appState.map.getSource('player-position').setData({
+            type: 'FeatureCollection',
+            features: [{
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: [lon, lat] },
+                properties: {}
+            }]
+        });
+    }
+
+    updateDistances();
+}
+
+function onGPSError(error) {
+    const gpsEl = document.getElementById('gps-status');
+    if (error.code === error.PERMISSION_DENIED) {
+        gpsEl.textContent = 'GPS permission denied';
+    } else if (error.code === error.POSITION_UNAVAILABLE) {
+        gpsEl.textContent = 'GPS unavailable';
+    } else if (error.code === error.TIMEOUT) {
+        gpsEl.textContent = 'GPS timed out';
+    } else {
+        gpsEl.textContent = 'GPS error';
+    }
+    gpsEl.classList.add('warning');
+}
+
+// Haversine formula - returns distance in yards
+function distanceInYards(lat1, lon1, lat2, lon2) {
+    const R = 6371000; // Earth radius in meters
+    const toRad = (deg) => deg * Math.PI / 180;
+
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const meters = R * c;
+    return meters * 1.09361; // meters to yards
+}
+
+function updateDistances() {
+    if (!appState.playerPosition) return;
+
+    const hole = getHole(appState.currentCourseId, appState.currentHole);
+    if (!hole) return;
+
+    const { lat, lon } = appState.playerPosition;
+
+    const distFront = distanceInYards(lat, lon, hole.greenFront[1], hole.greenFront[0]);
+    const distCenter = distanceInYards(lat, lon, hole.greenCenter[1], hole.greenCenter[0]);
+    const distBack = distanceInYards(lat, lon, hole.greenBack[1], hole.greenBack[0]);
+
+    document.getElementById('dist-front').textContent = Math.round(distFront);
+    document.getElementById('dist-center').textContent = Math.round(distCenter);
+    document.getElementById('dist-back').textContent = Math.round(distBack);
 }
 
 document.getElementById('prev-hole').addEventListener('click', () => {

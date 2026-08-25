@@ -31,7 +31,7 @@ const COURSES = {
             {
                 holeNumber: 1,
                 par: 4,
-                yardage: 386,
+                yardage: 382,
                 tee: [-75.40679047551636, 38.90084010013353],
                 greenFront: [-75.4103126089722, 38.89963382905633],
                 greenCenter: [-75.4103776110409, 38.899593162885274],
@@ -40,8 +40,8 @@ const COURSES = {
             // HOLE 2 - Southern Delaware Golf Club (real GPS data)
             {
                 holeNumber: 2,
-                par: 4,
-                yardage: 386,
+                par: 5,
+                yardage: 447,
                 tee: [-75.41110454642197, 38.89862084916154],
                 greenFront: [-75.40759766911238, 38.896367251748394],
                 greenCenter: [-75.40751467332501, 38.89636246717086],
@@ -51,7 +51,7 @@ const COURSES = {
             {
                 holeNumber: 3,
                 par: 4,
-                yardage: 386,
+                yardage: 401,
                 tee: [-75.4075763944941, 38.895409809127266],
                 greenFront: [-75.41061577156366, 38.89751708643028],
                 greenCenter: [-75.41070159477704, 38.897607393761156],
