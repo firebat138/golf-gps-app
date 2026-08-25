@@ -9,7 +9,7 @@
 
 const CONFIG = {
     mapbox: {
-        accessToken: 'YOUR_MAPBOX_TOKEN'
+        accessToken: 'pk.eyJ1IjoiZmlyZWJhdDEzOCIsImEiOiJjbXQ2NWJqM3Mwd2phMzJvbTIzazZubGlqIn0.-Aa4ln9NEIn0rxuQgFj9lQ'
     },
 
     map: {
