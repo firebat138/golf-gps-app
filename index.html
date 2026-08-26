@@ -102,49 +102,119 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .par-cell input{width:100%;height:32px;text-align:center;border:1px solid #ddd;border-radius:6px;font-size:13px;font-weight:600;background:#f8f8f8}
 .upload-area{border:2px dashed #ddd;border-radius:12px;padding:20px;text-align:center;cursor:pointer;margin-bottom:10px;background:#fafafa}
 
-/* GPS screen */
-.gps-wrap{background:#0a0e27;border-radius:14px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(0,0,0,0.08)}
-.gps-topbar{padding:10px 14px 12px;background:#141829;border-bottom:1px solid #2a3447}
-.gps-holerow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.gps-holerow .gh-num{font-size:16px;font-weight:700;color:#fff;letter-spacing:0.5px}
-.gps-holerow .gh-meta{font-size:11px;color:#b0b8c1;margin-top:2px}
-.gps-badge{font-size:10px;color:#b0b8c1;background:rgba(255,255,255,0.06);padding:5px 9px;border-radius:6px;border:1px solid #2a3447;white-space:nowrap}
-.gps-badge.warn{color:#ff6b3d;border-color:#ff6b3d}
-.gps-dists{display:flex;gap:10px;justify-content:center;align-items:flex-end}
-.gps-dcol{display:flex;flex-direction:column;align-items:center;flex:1}
-.gps-dcol .gd-label{font-size:10px;color:#b0b8c1;font-weight:700;letter-spacing:1px;margin-bottom:4px}
-.gps-dcol .gd-val{font-size:26px;font-weight:700;color:#00d97e;line-height:1}
-.gps-dcol.ctr{flex:1.2}
-.gps-dcol.ctr .gd-val{font-size:38px;color:#fff}
-.gps-mapholder{position:relative;height:52vh;min-height:320px;background:#0a0e27}
+/* GPS screen — dark "instrument" mode, built from the app's own forest/gold identity
+   (not a bolted-on navy/neon scheme) so it reads as part of the same product. */
+.gps-wrap{--gb:#0a1f10;--gp:#12301a;--gln:#264a2f;--gtx:#f4f1e4;--gtxd:#9fb8a5;--gold:#f5d76e;--brass:#c9a24b;--danger:#d9776b;
+  background:var(--gb);border-radius:16px;overflow:hidden;margin-bottom:10px;border:1px solid var(--gln);
+  font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif}
+.gps-wrap .gh-serif{font-family:'Fraunces',Georgia,serif}
+.gps-topbar{padding:14px 16px 14px;background:var(--gp);border-bottom:1px dashed var(--gln)}
+.gps-holerow{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.gps-holerow .gh-num{font-size:20px;font-weight:600;color:var(--gtx);letter-spacing:0.3px}
+.gps-holerow .gh-meta{font-size:11px;color:var(--gtxd);margin-top:3px;letter-spacing:0.3px}
+.gps-badge{font-size:10px;color:var(--gtxd);background:rgba(245,215,110,0.08);padding:6px 10px;border-radius:20px;border:1px solid var(--gln);white-space:nowrap;font-family:'IBM Plex Mono',monospace}
+.gps-badge.warn{color:var(--danger);border-color:var(--danger)}
+.gps-dists{display:flex;gap:8px;justify-content:center;align-items:flex-end}
+.gps-dcol{display:flex;flex-direction:column;align-items:center;flex:1;padding:8px 4px;border-radius:10px}
+.gps-dcol .gd-label{font-size:10px;color:var(--gtxd);font-weight:600;letter-spacing:1.5px;margin-bottom:5px}
+.gps-dcol .gd-val{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:var(--brass);line-height:1;font-variant-numeric:tabular-nums}
+.gps-dcol.ctr{flex:1.3;background:rgba(245,215,110,0.06);border:1px solid var(--gln)}
+.gps-dcol.ctr .gd-val{font-size:40px;color:var(--gold)}
+.gps-mapholder{position:relative;height:50vh;min-height:300px;background:var(--gb)}
 .gps-map{position:absolute;inset:0}
-.gps-target{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(10,14,39,0.92);border:1px solid #2a3447;border-radius:10px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;z-index:5}
-.gps-target .gt-label{font-size:9px;color:#b0b8c1;font-weight:700;letter-spacing:1px}
-.gps-target .gt-val{font-size:20px;font-weight:700;color:#fff}
-.gps-target button{background:#0a0e27;border:1px solid #2a3447;color:#fff;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer}
-.gps-hazbox{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:5px;z-index:5}
-.gps-hazrow{background:rgba(10,14,39,0.85);border:1px solid #2a3447;border-radius:8px;padding:5px 9px;text-align:right}
-.gps-hazrow .hz-lbl{font-size:8px;color:#b0b8c1;font-weight:700}
-.gps-hazrow .hz-val{font-size:14px;font-weight:700;color:#fff}
-.gps-notmapped{padding:40px 20px;text-align:center;color:#b0b8c1;font-size:13px;line-height:1.6}
-.gps-notmapped .nm-icon{font-size:32px;margin-bottom:10px}
-.gps-nav{display:flex;gap:8px;padding:10px 14px 14px;background:#141829}
+.gps-target{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(10,31,16,0.94);border:1px solid var(--gln);border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;z-index:5;backdrop-filter:blur(6px)}
+.gps-target .gt-label{font-size:9px;color:var(--gtxd);font-weight:700;letter-spacing:1.5px}
+.gps-target .gt-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--gtx)}
+.gps-target button{background:var(--gb);border:1px solid var(--gln);color:var(--gtx);width:32px;height:32px;border-radius:50%;font-size:14px;cursor:pointer}
+.gps-hazbox{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.gps-hazrow{background:rgba(10,31,16,0.9);border:1px solid var(--gln);border-radius:10px;padding:6px 10px;text-align:right;backdrop-filter:blur(6px)}
+.gps-hazrow .hz-lbl{font-size:8px;color:var(--gtxd);font-weight:700;letter-spacing:0.5px}
+.gps-hazrow .hz-val{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--gtx)}
+.gps-notmapped{padding:44px 20px;text-align:center;color:var(--gtxd);font-size:13px;line-height:1.7}
+.gps-notmapped .nm-icon{font-size:30px;margin-bottom:12px;opacity:0.7}
+.gps-nav{display:flex;gap:8px;padding:12px 16px 16px;background:var(--gp)}
+.gps-nav .nbtn{background:transparent;color:var(--gtx);border:1px solid var(--gln);border-radius:10px}
 
-/* GPS score panel (matches reference: colored name, big score, circular +/- , putts) */
-.gps-scorewrap{padding:10px 14px 4px;background:#141829}
+/* Stitched-edge divider — the one signature detail, echoing a yardage-book page perforation */
+.gps-stitch{height:1px;background:repeating-linear-gradient(90deg,var(--gln) 0 6px,transparent 6px 12px);margin:0 16px}
+
+/* GPS score panel */
+.gps-scorewrap{padding:14px 16px 6px;background:var(--gp)}
 .gps-scoregrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.gps-pcard{background:#0a0e27;border:1px solid #2a3447;border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px}
-.gps-pname{font-size:12px;font-weight:700;letter-spacing:0.3px}
-.gps-sinput{width:64px;height:44px;text-align:center;border:1px solid #2a3447;border-radius:8px;font-size:22px;font-weight:700;background:#141829;color:#fff}
-.gps-pbtns{display:flex;gap:10px;align-items:center;justify-content:center}
+.gps-pcard{background:var(--gb);border:1px solid var(--gln);border-radius:12px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:7px}
+.gps-pname{font-size:12px;font-weight:600;letter-spacing:0.3px}
+.gps-sinput{width:64px;height:46px;text-align:center;border:1px solid var(--gln);border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;background:var(--gp);color:var(--gtx)}
+.gps-sinput:focus{outline:none;border-color:var(--gold)}
+.gps-pbtns{display:flex;gap:12px;align-items:center;justify-content:center}
 .gps-pbtn{width:30px;height:30px;border-radius:50%;border:1.5px solid;background:transparent;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.gps-pscorelbl{font-size:9px;color:#7a8394;letter-spacing:0.5px;font-weight:700}
+.gps-pscorelbl{font-size:9px;color:var(--gtxd);letter-spacing:0.5px;font-weight:700}
 .gps-puttsrow{display:flex;align-items:center;gap:6px;margin-top:2px}
-.gps-pputts{font-size:9px;color:#7a8394;letter-spacing:0.5px;text-transform:uppercase;font-weight:700}
-.gps-puttsinput{width:38px;height:28px;text-align:center;border:1px solid #2a3447;border-radius:6px;font-size:13px;font-weight:600;background:#141829;color:#fff}
+.gps-pputts{font-size:9px;color:var(--gtxd);letter-spacing:0.5px;text-transform:uppercase;font-weight:700}
+.gps-puttsinput{width:38px;height:28px;text-align:center;border:1px solid var(--gln);border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;background:var(--gp);color:var(--gtx)}
+.gps-puttsinput:focus{outline:none;border-color:var(--gold)}
+
+/* Shot tracker */
+.gps-shotwrap{padding:14px 16px;background:var(--gp)}
+.gps-shot-idle{display:flex;align-items:center;gap:10px}
+.gps-shot-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:12px;border:1px solid var(--gold);background:rgba(245,215,110,0.08);color:var(--gold);font-weight:600;font-size:13px;letter-spacing:0.3px;cursor:pointer}
+.gps-shot-ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--gold)}
+.gps-clubgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.gps-clubchip{padding:9px 4px;text-align:center;border-radius:9px;border:1px solid var(--gln);background:var(--gb);color:var(--gtx);font-size:11px;font-weight:600;cursor:pointer}
+.gps-clubchip:active{border-color:var(--gold);color:var(--gold)}
+.gps-shot-active{display:flex;flex-direction:column;gap:10px}
+.gps-shot-active-row{display:flex;align-items:center;gap:10px}
+.gps-pulse{width:10px;height:10px;border-radius:50%;background:var(--gold);animation:gpspulse 1.4s ease-in-out infinite;flex-shrink:0}
+@keyframes gpspulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.gps-shot-active-text{font-size:12px;color:var(--gtx);flex:1}
+.gps-shot-active-text b{color:var(--gold)}
+.gps-shot-endbtn{padding:12px 16px;border-radius:12px;border:none;background:var(--gold);color:var(--gb);font-weight:700;font-size:13px;letter-spacing:0.3px;cursor:pointer}
+.gps-shot-cancel{font-size:11px;color:var(--gtxd);text-align:center;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.gps-shot-result{display:flex;align-items:center;justify-content:space-between;background:rgba(245,215,110,0.08);border:1px solid var(--gold);border-radius:12px;padding:12px 14px}
+.gps-shot-result-yards{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:var(--gold)}
+.gps-shot-result-club{font-size:10px;color:var(--gtxd);letter-spacing:0.5px;margin-top:2px}
+.gps-shot-dismiss{background:transparent;border:1px solid var(--gln);color:var(--gtx);width:30px;height:30px;border-radius:50%;font-size:13px;cursor:pointer}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Card reveal popup — same interaction pattern as an achievement-unlock celebration
+   (queue, pop-in, glow ring) but showing an actual playing card, not a badge. */
+@keyframes cardPopIn{0%{transform:scale(0.4);opacity:0}60%{transform:scale(1.06);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes cardGlow{0%,100%{filter:drop-shadow(0 0 16px rgba(245,215,110,0.5))}50%{filter:drop-shadow(0 0 30px rgba(245,215,110,0.85))}}
+@keyframes cardRingSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+#cardPopupModal{position:fixed;inset:0;z-index:9000;background:rgba(6,15,9,0.86);display:flex;align-items:center;justify-content:center;padding:20px}
+#cardPopupCard{text-align:center;max-width:320px;width:100%;animation:cardPopIn 0.4s cubic-bezier(.34,1.56,.64,1) both}
+.cp-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;color:#f5d76e;margin-bottom:14px}
+.cp-facewrap{width:150px;height:150px;margin:0 auto 16px;position:relative;display:flex;align-items:center;justify-content:center}
+.cp-ring{position:absolute;inset:0;animation:cardRingSpin 7s linear infinite;opacity:0.4}
+.cp-face{width:104px;height:140px;border-radius:10px;background:#f4f1e4;display:flex;flex-direction:column;justify-content:space-between;padding:8px;box-sizing:border-box;animation:cardGlow 1.8s ease-in-out infinite;position:relative}
+.cp-face .cp-corner{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;line-height:1}
+.cp-face .cp-center{font-size:34px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.cp-name{font-size:20px;font-weight:700;margin-bottom:3px}
+.cp-reason{font-size:13px;color:#9fb8a5;margin-bottom:16px}
+.cp-pill{display:inline-block;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;background:#f5d76e;color:#0a1f10;margin-bottom:18px}
+.cp-hand-label{font-size:10px;letter-spacing:1px;color:#7a9083;font-weight:700;margin-bottom:8px}
+.cp-hand{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.cp-chip{width:34px;height:46px;border-radius:6px;background:#f4f1e4;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600}
+#cardPopupCloseBtn{padding:11px 34px;border-radius:12px;font-weight:700;background:transparent;color:#f5d76e;border:1px solid #f5d76e;cursor:pointer}
 </style>
 </head>
 <body>
+<div id="cardPopupModal" class="hidden" style="display:none">
+  <div id="cardPopupCard">
+    <div class="cp-eyebrow">🃏 CARD DEALT</div>
+    <div class="cp-facewrap">
+      <svg class="cp-ring" width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="70" fill="none" stroke="#f5d76e" stroke-width="1.5" stroke-dasharray="5 9"/></svg>
+      <div class="cp-face" id="cardPopupFace"></div>
+    </div>
+    <div class="cp-name" id="cardPopupName"></div>
+    <div class="cp-reason" id="cardPopupReason"></div>
+    <div class="cp-pill" id="cardPopupPill"></div>
+    <div class="cp-hand-label">Hand so far</div>
+    <div class="cp-hand" id="cardPopupHand"></div>
+    <button id="cardPopupCloseBtn">Nice!</button>
+  </div>
+</div>
 <div id="splash" onclick="dismissSplash()" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(160deg,#0a2a0a 0%,#1a4a1a 50%,#0a2a0a 100%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none">
   <img src="splash.webp" style="width:240px;height:240px;border-radius:50%;box-shadow:0 0 40px rgba(245,215,110,0.4);margin-bottom:32px">
   <div id="splashTap" style="color:#f5d76e;font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;animation:pulse 1.5s ease-in-out infinite">Touch to Begin</div>
@@ -271,7 +341,54 @@ function ap(){return[0,1,2,3].filter(i=>S.players[i]&&S.players[i].trim()!=='');
 function initials(n){return n.replace(/[^a-zA-Z ]/g,'').split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||n.slice(0,2).toUpperCase();}
 function rc(c){return RED.includes(c.slice(-1))?'cr':'';}
 function rcard(c){return`<span class="chip ${rc(c)}">${c}</span>`;}
-function giveCards(pi,n,hole,reason){for(let i=0;i<n;i++){const c=deal();if(c)S.playerCards[pi].push({card:c,hole:hole!==undefined?hole:-1,reason:reason||'unknown'});}}
+function giveCards(pi,n,hole,reason){
+  const newCards=[];
+  for(let i=0;i<n;i++){const c=deal();if(c){S.playerCards[pi].push({card:c,hole:hole!==undefined?hole:-1,reason:reason||'unknown'});newCards.push(c);}}
+  if(newCards.length>0)queueCardPopup(pi,newCards,reason||'unknown');
+}
+
+// ── Card reveal popup ──
+const CARD_REASON_LABEL={par:'Par',birdie:'Birdie',eagle:'Eagle',closestPin:'Closest to the Pin',longestDrive:'Longest Drive',chipIn:'Chip In',start:'Starting Hand',front9winner:'Front 9 Winner',back9winner:'Back 9 Winner',overallwinner:'Overall Winner'};
+let cardPopupQueue=[],cardPopupShowing=false;
+
+function queueCardPopup(pi,newCards,reason){
+  cardPopupQueue.push({pi,newCards,reason});
+  if(!cardPopupShowing)showNextCardPopup();
+}
+
+function cardFaceHTML(cardStr,big){
+  const suit=cardStr.slice(-1),rank=cardStr.slice(0,-1);
+  const red=RED.includes(suit);
+  const col=red?'#b8443a':'#1c1e1b';
+  if(big)return`<div class="cp-corner" style="color:${col}">${rank}${suit}</div><div class="cp-center" style="color:${col}">${suit}</div><div class="cp-corner" style="align-self:flex-end;transform:rotate(180deg);color:${col}">${rank}${suit}</div>`;
+  return`<span style="color:${col}">${rank}${suit}</span>`;
+}
+
+function showNextCardPopup(){
+  if(cardPopupQueue.length===0){cardPopupShowing=false;return;}
+  cardPopupShowing=true;
+  const{pi,newCards,reason}=cardPopupQueue[0];
+  const ns=names();
+  const col=(typeof GPS_PLAYER_COLORS!=='undefined')?GPS_PLAYER_COLORS[pi%4]:'#f5d76e';
+  document.getElementById('cardPopupName').textContent=ns[pi];
+  document.getElementById('cardPopupName').style.color=col;
+  document.getElementById('cardPopupReason').textContent=CARD_REASON_LABEL[reason]||reason;
+  document.getElementById('cardPopupPill').textContent=newCards.length>1?`+${newCards.length} Cards`:'+1 Card';
+  document.getElementById('cardPopupFace').innerHTML=cardFaceHTML(newCards[newCards.length-1],true);
+  document.getElementById('cardPopupHand').innerHTML=cardStrings(pi).map(c=>`<div class="cp-chip">${cardFaceHTML(c,false)}</div>`).join('');
+  const modal=document.getElementById('cardPopupModal');
+  modal.style.display='flex';
+  modal.classList.remove('hidden');
+}
+
+document.getElementById('cardPopupCloseBtn')?.addEventListener('click',()=>{
+  const modal=document.getElementById('cardPopupModal');
+  modal.classList.add('hidden');
+  modal.style.display='none';
+  cardPopupQueue.shift();
+  if(cardPopupQueue.length>0)setTimeout(showNextCardPopup,350);
+  else cardPopupShowing=false;
+});
 function cardStrings(pi){return S.playerCards[pi].map(e=>typeof e==='string'?e:e.card||e);}
 function redealHole(h){
   // Remove all cards from this hole and return them to deck
@@ -1421,7 +1538,8 @@ async function sendRoundEmail(){
 }
 
 // ── GPS ──
-const GPS={map:null,mapReady:false,watchId:null,playerPos:null,targetPos:null,currentHoleNum:null};
+const GPS={map:null,mapReady:false,watchId:null,playerPos:null,targetPos:null,currentHoleNum:null,
+  shotState:null,pickingClub:false,shotPlayerIdx:0,lastShotResult:null,shotLog:[]};
 
 function currentActualHoleNumber(){
   const i=S.currentHole;
@@ -1474,8 +1592,8 @@ function renderGPS(){
       <div class="gps-topbar">
         <div class="gps-holerow">
           <div>
-            <div class="gh-num">HOLE ${hn}</div>
-            <div class="gh-meta">PAR ${par}${c?' · '+c.name:''}</div>
+            <div class="gh-num gh-serif">Hole ${hn}</div>
+            <div class="gh-meta">Par ${par}${c?' · '+c.name:''}</div>
           </div>
           <div class="gps-badge" id="gpsAccBadge">GPS —</div>
         </div>
@@ -1494,12 +1612,15 @@ function renderGPS(){
           </div>
           <div class="gps-hazbox" id="gpsHazBox"></div>
         </div>
+        <div class="gps-stitch"></div>
+        <div id="gpsShotWrap">${renderGPSShotTracker()}</div>
       `:`
         <div class="gps-notmapped">
           <div class="nm-icon">📍</div>
           ${c?`This hole hasn't been GPS-mapped yet for ${c.name}.`:'Select a course first to use GPS.'}
         </div>
       `}
+      <div class="gps-stitch"></div>
       <div id="gpsScorePanelWrap">${renderGPSScorePanel()}</div>
       <div class="gps-nav">
         <button class="nbtn" style="flex:1" onclick="showScreen(S.holeData.length?'hole':'setup')">← Back to Scoring</button>
@@ -1525,15 +1646,15 @@ function ensureGPSMap(){
 
   GPS.map.on('load',()=>{
     GPS.map.addSource('gps-hole-data',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
-    GPS.map.addLayer({id:'gps-tee',type:'circle',source:'gps-hole-data',filter:['==',['get','type'],'tee'],paint:{'circle-radius':6,'circle-color':'#ff6b3d','circle-stroke-width':2,'circle-stroke-color':'#fff'}});
-    GPS.map.addLayer({id:'gps-greens',type:'circle',source:'gps-hole-data',filter:['in',['get','type'],['literal',['front','center','back']]],paint:{'circle-radius':['case',['==',['get','type'],'center'],8,6],'circle-color':['case',['==',['get','type'],'center'],'#00d97e','#00a85c'],'circle-stroke-width':2,'circle-stroke-color':'#fff'}});
+    GPS.map.addLayer({id:'gps-tee',type:'circle',source:'gps-hole-data',filter:['==',['get','type'],'tee'],paint:{'circle-radius':6,'circle-color':'#d9776b','circle-stroke-width':2,'circle-stroke-color':'#f4f1e4'}});
+    GPS.map.addLayer({id:'gps-greens',type:'circle',source:'gps-hole-data',filter:['in',['get','type'],['literal',['front','center','back']]],paint:{'circle-radius':['case',['==',['get','type'],'center'],8,6],'circle-color':['case',['==',['get','type'],'center'],'#f5d76e','#c9a24b'],'circle-stroke-width':2,'circle-stroke-color':'#f4f1e4'}});
 
     GPS.map.addSource('gps-player',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
-    GPS.map.addLayer({id:'gps-player-halo',type:'circle',source:'gps-player',paint:{'circle-radius':14,'circle-color':'#3b82f6','circle-opacity':0.25}});
-    GPS.map.addLayer({id:'gps-player-dot',type:'circle',source:'gps-player',paint:{'circle-radius':7,'circle-color':'#3b82f6','circle-stroke-width':3,'circle-stroke-color':'#fff'}});
+    GPS.map.addLayer({id:'gps-player-halo',type:'circle',source:'gps-player',paint:{'circle-radius':14,'circle-color':'#f5d76e','circle-opacity':0.22}});
+    GPS.map.addLayer({id:'gps-player-dot',type:'circle',source:'gps-player',paint:{'circle-radius':7,'circle-color':'#f5d76e','circle-stroke-width':3,'circle-stroke-color':'#0a1f10'}});
 
     GPS.map.addSource('gps-hazards',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
-    GPS.map.addLayer({id:'gps-hazard-dots',type:'circle',source:'gps-hazards',paint:{'circle-radius':6,'circle-color':['match',['get','hazardType'],'bunker','#f2c94c','water','#2f80ed','#999999'],'circle-stroke-width':2,'circle-stroke-color':'#fff'}});
+    GPS.map.addLayer({id:'gps-hazard-dots',type:'circle',source:'gps-hazards',paint:{'circle-radius':6,'circle-color':['match',['get','hazardType'],'bunker','#d4b483','water','#6fa8b8','#9fb8a5'],'circle-stroke-width':2,'circle-stroke-color':'#f4f1e4'}});
 
     GPS.map.addSource('gps-target',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
     GPS.map.addLayer({id:'gps-target-ring',type:'circle',source:'gps-target',paint:{'circle-radius':12,'circle-color':'rgba(0,0,0,0)','circle-stroke-width':2,'circle-stroke-color':'#ffffff'}});
@@ -1651,7 +1772,7 @@ function renderGPSHazardBox(hole,distOnly){
   }).join('');
 }
 
-const GPS_PLAYER_COLORS=['#00d97e','#3b82f6','#f2994a','#a855f7'];
+const GPS_PLAYER_COLORS=['#f5d76e','#7fa88f','#c17a54','#9c7fa8'];
 
 function renderGPSScorePanel(){
   if(!S.holeData.length)return'';
@@ -1718,9 +1839,105 @@ function gpsSetPutts(pi,val){
   refreshGPSScorePanel();
 }
 
+// ── Shot Tracker ──
+const SHOTK='donkey_shots_v1';
+const CLUBS=['Driver','3W','5W','Hyb','4i','5i','6i','7i','8i','9i','PW','SW'];
+
+function saveShotLog(){try{localStorage.setItem(SHOTK,JSON.stringify(GPS.shotLog));}catch(e){}}
+function loadShotLog(){try{const d=localStorage.getItem(SHOTK);if(d)GPS.shotLog=JSON.parse(d);}catch(e){}}
+
+function refreshGPSShotWrap(){
+  const wrap=document.getElementById('gpsShotWrap');
+  if(wrap)wrap.innerHTML=renderGPSShotTracker();
+}
+
+function renderGPSShotTracker(){
+  const ns=names(),active=ap();
+  if(active.length===0)return'';
+  if(!active.includes(GPS.shotPlayerIdx))GPS.shotPlayerIdx=active[0];
+
+  if(GPS.lastShotResult){
+    const r=GPS.lastShotResult;
+    return`<div class="gps-shotwrap"><div class="gps-shot-result">
+      <div><div class="gps-shot-result-yards">${r.yards} yds</div><div class="gps-shot-result-club">${r.club.toUpperCase()} · ${ns[r.playerIdx]} · saved</div></div>
+      <button class="gps-shot-dismiss" onclick="gpsDismissShotResult()">✕</button>
+    </div></div>`;
+  }
+
+  if(GPS.shotState){
+    const s=GPS.shotState;
+    return`<div class="gps-shotwrap"><div class="gps-shot-active">
+      <div class="gps-shot-active-row">
+        <div class="gps-pulse"></div>
+        <div class="gps-shot-active-text">Tracking <b>${s.club}</b> for <b>${ns[s.playerIdx]}</b> — walk to your ball, then tap End Shot.</div>
+      </div>
+      <button class="gps-shot-endbtn" onclick="gpsEndShot()">End Shot</button>
+      <div class="gps-shot-cancel" onclick="gpsCancelShot()">Cancel</div>
+    </div></div>`;
+  }
+
+  if(GPS.pickingClub){
+    return`<div class="gps-shotwrap">
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        ${active.map(i=>`<div class="gps-clubchip" style="${i===GPS.shotPlayerIdx?'border-color:var(--gold);color:var(--gold)':''}" onclick="gpsSetShotPlayer(${i})">${ns[i]}</div>`).join('')}
+      </div>
+      <div class="gps-clubgrid">
+        ${CLUBS.map(cl=>`<div class="gps-clubchip" onclick="gpsPickClub('${cl}')">${cl}</div>`).join('')}
+      </div>
+      <div class="gps-shot-cancel" style="margin-top:10px" onclick="gpsCancelShot()">Cancel</div>
+    </div>`;
+  }
+
+  return`<div class="gps-shotwrap"><div class="gps-shot-idle">
+    <button class="gps-shot-btn" onclick="gpsOpenClubPicker()"><span class="gps-shot-ring"></span> Track a Shot</button>
+  </div></div>`;
+}
+
+function gpsOpenClubPicker(){
+  if(!GPS.playerPos){alert('Waiting on GPS signal — try again in a moment.');return;}
+  GPS.pickingClub=true;
+  refreshGPSShotWrap();
+}
+
+function gpsSetShotPlayer(idx){
+  GPS.shotPlayerIdx=idx;
+  refreshGPSShotWrap();
+}
+
+function gpsPickClub(club){
+  if(!GPS.playerPos)return;
+  GPS.shotState={club,playerIdx:GPS.shotPlayerIdx,startLat:GPS.playerPos.lat,startLon:GPS.playerPos.lon,startedAt:Date.now()};
+  GPS.pickingClub=false;
+  refreshGPSShotWrap();
+}
+
+function gpsEndShot(){
+  if(!GPS.shotState||!GPS.playerPos)return;
+  const s=GPS.shotState;
+  const yards=Math.round(haversineYards(s.startLat,s.startLon,GPS.playerPos.lat,GPS.playerPos.lon));
+  const hole=currentGPSHole();
+  GPS.shotLog.push({ts:Date.now(),courseId:S.selectedCourse,hole:hole?hole.holeNumber:null,club:s.club,playerIdx:s.playerIdx,yards});
+  saveShotLog();
+  GPS.lastShotResult={club:s.club,yards,playerIdx:s.playerIdx};
+  GPS.shotState=null;
+  refreshGPSShotWrap();
+}
+
+function gpsCancelShot(){
+  GPS.shotState=null;
+  GPS.pickingClub=false;
+  refreshGPSShotWrap();
+}
+
+function gpsDismissShotResult(){
+  GPS.lastShotResult=null;
+  refreshGPSShotWrap();
+}
+
 // ── Boot ──
 loadCourses();
 loadRoster();
+loadShotLog();
 initEmailJS();
 if(load()&&S.holeData.length&&S.screen!=='setup')showScreen(S.screen);
 else{S.screen='setup';renderSetup();}
